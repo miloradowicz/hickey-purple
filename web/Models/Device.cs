@@ -11,7 +11,7 @@ public class Device
   }
 
   [Key]
-  public int Id { get; set; }
+  public uint Id { get; set; }
   public string Name { get; set; }
   public string Address { get; set; }
   public uint Port { get; set; }

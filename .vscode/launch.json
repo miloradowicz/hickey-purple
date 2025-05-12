@@ -43,6 +43,6 @@
       "sourceFileMap": {
         "/src": "${workspaceFolder}"
       }
-    },
+    }
   ]
 }

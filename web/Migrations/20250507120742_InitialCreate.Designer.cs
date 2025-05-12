@@ -12,7 +12,7 @@ using web.Models;
 namespace web.Migrations
 {
     [DbContext(typeof(PurpleContext))]
-    [Migration("20250504024021_InitialCreate")]
+    [Migration("20250507120742_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,11 +27,11 @@ namespace web.Migrations
 
             modelBuilder.Entity("web.Models.Device", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Address")
                         .HasColumnType("text");

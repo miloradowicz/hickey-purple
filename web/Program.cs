@@ -2,11 +2,15 @@ using Microsoft.EntityFrameworkCore;
 using web.Models;
 using web.Services;
 
+Console.WriteLine(Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT"));
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddDbContext<PurpleContext>(opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("PurpleConnection")));
+builder.Services.AddTransient<web.Services.IHttpClientFactory, HttpClientFactory>();
+builder.Services.AddTransient<IDeviceService, DeviceService>();
 
 var app = builder.Build();
 
@@ -21,10 +25,8 @@ var summaries = new[]
 
 app.MapPut("/reboot", async (IDeviceService rebootService) =>
 {
-    await rebootService.Reboot();
+    await rebootService.RebootAllDevices();
 });
-
-app.MapGet("/status", async(I))
 
 app.MapGet("/weatherforecast", () =>
 {

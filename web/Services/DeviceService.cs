@@ -18,26 +18,27 @@ public class DeviceService : IDeviceService
 
   public async Task<DeviceStatus> GetDeviceStatus(int id)
   {
-    var device = await this.context.Devices.FindAsync(id);
-
-    if (device is null)
-    {
-      throw new DeviceNotFoundException($"Could not find device by id {id}");
-    }
-
+    var device = await this.context.Devices.FindAsync(id) ?? throw new DeviceNotFoundException($"Could not find device by id {id}");
+    
     try
     {
       using var client = this.clientFactory.GetHttpClient(device.Address, device.Port, device.Username, device.Password);
 
-      var result = await client.GetAsync(null as string, null);
+      var result = await client.GetAsync("System/capabilities");
 
       if (result.IsSuccessStatusCode)
       {
-        return new DeviceStatus(device.Name, )
+        return new DeviceStatus(device.Name, DeviceStatusEnum.Up, device.LastReboot);
+      }
+      else
+      {
+        return new DeviceStatus(device.Name, DeviceStatusEnum.Down, device.LastReboot);
       }
     }
     catch (HttpRequestException)
-    { }
+    {
+      return new DeviceStatus(device.Name, DeviceStatusEnum.RequestFailed, device.LastReboot);
+    }
   }
 
   public async Task RebootAllDevices()
@@ -53,7 +54,7 @@ public class DeviceService : IDeviceService
     }
   }
 
-  public async Task RebootDevice(int id)
+  public async Task RebootDevice(uint id)
   {
     var device = await this.context.Devices.FindAsync(id);
 
@@ -66,7 +67,7 @@ public class DeviceService : IDeviceService
     {
       using var client = this.clientFactory.GetHttpClient(device.Address, device.Port, device.Username, device.Password);
 
-      var result = await client.PutAsync(null as string, null);
+      var result = await client.PutAsync("reboot", null);
 
       if (result.IsSuccessStatusCode)
       {

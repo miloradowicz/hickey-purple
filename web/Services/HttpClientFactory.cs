@@ -15,7 +15,7 @@ public class HttpClientFactory(ILogger<HttpClientFactory> logger) : IHttpClientF
       Credentials = new NetworkCredential(username, password)
     })
     {
-      BaseAddress = new Uri($"http://${address}:${port}/ISAPI/reboot")
+      BaseAddress = new Uri($"http://${address}:${port}/ISAPI")
     };
   }
 }
